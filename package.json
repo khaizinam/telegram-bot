@@ -1,0 +1,21 @@
+{
+  "name": "telegram-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "queue": "node queue.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^17.2.0",
+    "ioredis": "^5.6.1",
+    "node-telegram-bot-api": "^0.66.0",
+    "redis": "^5.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
