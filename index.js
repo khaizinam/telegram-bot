@@ -16,10 +16,11 @@ bot.on('message', async (msg) => {
   prepareUser(msg.from);
 
   const job = {
+    event: 'run_command',
     chatId,
     text,
     user: msg.from
   };
   console.log("Add new to queue");
-  await redis.rPush('run_command_queue', JSON.stringify(job));
+  await redis.rPush('telegrambot_default_queue', JSON.stringify(job));
 });

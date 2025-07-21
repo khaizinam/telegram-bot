@@ -1,5 +1,5 @@
 const path = require("path");
-const bot = require("../bot");
+const bot = require("../../bot");
 
 const colors = {
   green: (msg) => `\x1b[32m${msg}\x1b[0m`,
@@ -24,7 +24,7 @@ module.exports = async function (job) {
   const args = parts.slice(1);
 
   try {
-    const commandPath = path.join(__dirname, `../commands/${cmdName}.js`);
+    const commandPath = path.join(__dirname, `../../commands/${cmdName}.js`);
     const command = require(commandPath);
 
     const msg = {
