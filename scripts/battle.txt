@@ -1,0 +1,92 @@
+
+Tôi đang phát triển một game bot RPG Telegram bằng Node.js. Game có đội hình pet 1–3 con, chiến đấu theo lượt (turn-based), sử dụng kỹ năng, ngũ hành và nhiều hiệu ứng trạng thái. Tất cả dữ liệu pet và skill nằm trong file `entities.js`. Dưới đây là mô tả chuẩn để một AI khác có thể hiểu và phát triển tiếp:
+
+=== 1. Thông tin mỗi Pet ===
+Mỗi pet có các chỉ số:
+- name: Tên pet
+- hp: Máu
+- atk: Tấn công vật lý
+- mag: Sức mạnh phép thuật
+- physic_def: Phòng thủ vật lý (giảm sát thương từ atk)
+- mag_def: Kháng phép (giảm sát thương từ mag)
+- speed: Tốc độ đánh
+- element: Ngũ hành (kim, mộc, thủy, hỏa, thổ)
+- skill: Một skill duy nhất
+
+=== 2. Loại kỹ năng (skill types) ===
+
+2.1. Gây sát thương trực tiếp
+type: 'direct'
+scaleType: 'atk' | 'mag' | 'def' | 'hp'
+scale: số nhân
+damageType: 'physical' | 'magical'
+
+2.2. Gây sát thương theo thời gian (DOT)
+type: 'dot'
+effect_type: 'poison' | 'burn' | 'bleed' 
+damagePerTurn: số sát thương mỗi lượt
+duration: số lượt
+
+2.3. Hiệu ứng khống chế
+type: 'status'
+effect_type: 'freeze' | 'stun'
+duration: số lượt bị ảnh hưởng
+
+2.4. Hỗ trợ hồi máu hoặc tạo giáp
+type: 'support'
+support_type: 'heal' | 'heal_allies' | 'shield' | 'shield_allies'
+amount: số máu hoặc giáp
+
+2.5. Buff chỉ số
+type: 'buff'
+buff_target: 'self' | 'allies'
+buff_type: 'atk' | 'def' | 'mag' | 'hp' | 'physic_def' | 'mag_def'
+amount: số lượng tăng
+duration: số lượt
+
+=== 3. Hệ thống ngũ hành ===
+Ngũ hành và tương khắc:
+- Kim khắc Mộc
+- Mộc khắc Thổ
+- Thổ khắc Thủy
+- Thủy khắc Hỏa
+- Hỏa khắc Kim
+
+Tăng sát thương: +20% nếu khắc hệ
+Giảm sát thương: -20% nếu bị khắc
+
+=== 4. Hiệu ứng kỹ năng (mô tả) ===
+- Poison: mất máu mỗi lượt
+- Burn: mất máu mỗi lượt (tỉ lệ hụt cao)
+- Bleed: mất máu theo % HP
+- Freeze: đóng băng, không hành động
+- Stun: choáng, không ra đòn
+- Heal: hồi máu
+- Shield: tạo giáp
+- Buff: tăng chỉ số (atk, def, mag, hp...)
+
+=== 5. Ví dụ entities.js ===
+const pets = {
+  "firewolf": {
+    name: "Sói Lửa",
+    element: "hỏa",
+    hp: 300,
+    atk: 50,
+    mag: 40,
+    physic_def: 20,
+    mag_def: 10,
+    speed: 60,
+    skill: {
+      name: "Thiêu Cháy",
+      description: "Gây 25 sát thương mỗi lượt trong 3 lượt (Lửa).",
+      type: "dot",
+      effect_type: "burn",
+      damagePerTurn: 25,
+      duration: 3
+    }
+  }
+};
+
+module.exports = { pets };
+
+== Dùng prompt này để tạo hệ thống chiến đấu, skill, khắc hệ, combat log và AI logic.
