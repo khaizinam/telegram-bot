@@ -1,0 +1,66 @@
+import crypto from "crypto";
+import axios from "axios";
+
+const apiKey = process.env.OKX_API_KEY;      // thay bằng biến môi trường
+const secretKey = process.env.OKX_SECRET;    // thay bằng biến môi trường
+const passphrase = process.env.OKX_PASS;     // thay bằng biến môi trường
+const baseUrl = "https://www.okx.com";
+
+// Hàm ký request
+function sign(message) {
+  return crypto
+    .createHmac("sha256", secretKey)
+    .update(message)
+    .digest("base64");
+}
+
+// Gọi API
+async function okxRequest(method, path, body = "") {
+  const timestamp = new Date().toISOString();
+  const message = timestamp + method + path + body;
+  const signature = sign(message);
+
+  const headers = {
+    "OK-ACCESS-KEY": apiKey,
+    "OK-ACCESS-SIGN": signature,
+    "OK-ACCESS-TIMESTAMP": timestamp,
+    "OK-ACCESS-PASSPHRASE": passphrase,
+    "Content-Type": "application/json",
+  };
+
+  const url = baseUrl + path;
+  const res = await axios({
+    method,
+    url,
+    headers,
+    data: body || undefined,
+  });
+
+  return res.data;
+}
+
+// Ví dụ: lấy giá TON/USDT
+async function getPrice() {
+  const data = await okxRequest("GET", "/api/v5/market/ticker?instId=TON-USDT");
+  console.log("Giá TON/USDT:", data);
+}
+
+// Ví dụ: đặt lệnh mua
+async function placeOrder() {
+  const order = {
+    instId: "TON-USDT",
+    tdMode: "cash",
+    side: "buy",
+    ordType: "limit",
+    px: "4.5",   // giá mua
+    sz: "1",     // số lượng
+  };
+
+  const body = JSON.stringify(order);
+  const data = await okxRequest("POST", "/api/v5/trade/order", body);
+  console.log("Kết quả đặt lệnh:", data);
+}
+
+// Chạy thử
+getPrice();
+// placeOrder();
