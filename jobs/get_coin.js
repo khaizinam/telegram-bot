@@ -32,15 +32,15 @@ async function run() {
       needNotify = true; // lần đầu insert
     }
 
-    // Lưu giá hiện tại vào DB
+    console.log("Current price " + currentPrice);
+    
+    if (!needNotify) return;
+
     await insertCoinPrice(coinid, {
       currentPrice,
       high24h,
       low24h,
     });
-
-    console.log("Current price " + currentPrice);
-    if (!needNotify) return;
 
     // Lấy danh sách tất cả room cần notify
     const notifyList = await getActiveNotify(coinid);
