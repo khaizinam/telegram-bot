@@ -4,7 +4,7 @@ module.exports = {
       name: "app-dev",
       script: "yarn",
       args: "dev",
-      interpreter: "bash",
+      interpreter: "node",
       watch: false,
       out_file: "./logs/pm2/app-dev-out.log",
       error_file: "./logs/pm2/app-dev-error.log",
