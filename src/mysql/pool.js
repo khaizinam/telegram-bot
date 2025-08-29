@@ -11,7 +11,20 @@ const pool = mysql.createPool({
   queueLimit: 0
 }).promise();
 
+const TABLES = {
+  MARKET_NOTIFY : {
+    name : 'app_market_notify'
+  },
+  COIN_MARKET: {
+    name : 'app_coinmarket'
+  },
+  USER: {
+    name : 'app_users'
+  }
+}
+
 // Xuất kết nối để sử dụng nơi khác
 module.exports = {
-  pool
+  pool,
+  TABLES
 };

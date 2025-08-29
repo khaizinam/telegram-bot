@@ -1,4 +1,4 @@
-const { pool } = require('./pool');
+const { pool, TABLES } = require('./pool');
 
 /**
  * Lấy danh sách market_notify theo trang cho 1 user
@@ -12,7 +12,7 @@ async function get_market_notify(page = 1, limit = 20, telegram_uid) {
 
   const [rows] = await pool.execute(
     `SELECT * 
-     FROM app_market_notify 
+     FROM ${TABLES.MARKET_NOTIFY.name} 
      WHERE telegram_uid = ?
      ORDER BY created_at DESC 
      LIMIT ${limit} OFFSET ${offset}`,
@@ -36,7 +36,7 @@ async function add_market_notify(data) {
 
   try {
     const [result] = await pool.execute(
-      `INSERT INTO app_market_notify (telegram_uid, coinid, chat_id, thread_id, status, created_at)
+      `INSERT INTO ${TABLES.MARKET_NOTIFY.name} (telegram_uid, coinid, chat_id, thread_id, status, created_at)
        VALUES (?, ?, ?, ?, 'active', NOW())`,
       [telegram_uid, coinid, chat_id, thread_id]
     );
@@ -55,7 +55,7 @@ async function add_market_notify(data) {
 async function delete_market_notify(id, telegram_uid) {
   try {
     const [result] = await pool.execute(
-      `DELETE FROM app_market_notify 
+      `DELETE FROM ${TABLES.MARKET_NOTIFY.name} 
        WHERE id = ? AND telegram_uid = ?`,
       [id, telegram_uid]
     );
@@ -70,7 +70,7 @@ async function get_active_notify_by_coin(coinid="TON-USDT") {
   try {
     const [rows] = await pool.execute(
       `SELECT * 
-       FROM app_market_notify
+       FROM ${TABLES.MARKET_NOTIFY.name}
        WHERE coinid = ? AND status = 'active'
        ORDER BY created_at DESC`,
       [coinid]
@@ -88,7 +88,7 @@ async function get_active_notify_by_coin(coinid="TON-USDT") {
  */
 async function getLastCoinPrice(coinid) {
   const [rows] = await pool.query(
-    "SELECT id, data_json, created_at FROM app_coinmarket WHERE coinid = ? ORDER BY created_at DESC LIMIT 1",
+    `SELECT id, data_json, created_at FROM  ${TABLES.COIN_MARKET.name} WHERE coinid = ? ORDER BY created_at DESC LIMIT 1`,
     [coinid]
   );
   return rows.length > 0 ? rows[0] : null;
@@ -101,7 +101,7 @@ async function getLastCoinPrice(coinid) {
  */
 async function insertCoinPrice(coinid, data) {
   await pool.query(
-    "INSERT INTO app_coinmarket (coinid, data_json, created_at, updated_at) VALUES (?, ?, NOW(), NOW())",
+    `INSERT INTO ${TABLES.COIN_MARKET.name} (coinid, data_json, created_at, updated_at) VALUES (?, ?, NOW(), NOW())`,
     [coinid, JSON.stringify(data)]
   );
 }
@@ -113,7 +113,7 @@ async function insertCoinPrice(coinid, data) {
  */
 async function getActiveNotify(coinid) {
   const [rows] = await pool.query(
-    "SELECT * FROM app_market_notify WHERE coinid = ? AND status = 'active'",
+    `SELECT * FROM ${TABLES.MARKET_NOTIFY.name} WHERE coinid = ? AND status = 'active'`,
     [coinid]
   );
   return rows;
