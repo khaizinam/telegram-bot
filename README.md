@@ -100,7 +100,8 @@ CREATE DATABASE telebot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 Import schema (nếu có):
 ```bash
-mysql -u root -p telebot < schema.sql
+mysql -u root -pkhaizinam dev_telegram < dump.sql
+mysqldump -u root -pkhaizinam dev_telegram > dump.sql
 ```
 
 ---
