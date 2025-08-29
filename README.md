@@ -27,23 +27,19 @@ Tạo file `.env` trong thư mục gốc:
 
 ```env
 # Telegram
-BOT_TOKEN=your_telegram_bot_token
+TELEGRAM_TOKEN=yout_token_here
 
 # Database MySQL
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=telebot
+DB_PASSWORD=khaizinam
+DB_NAME=dev_telegram
 
 # Redis
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 REDIS_PASSWORD=
-
-# App
-APP_ENV=development
-APP_PORT=3000
 ```
 
 ---
