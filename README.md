@@ -120,3 +120,14 @@ REDIS_PASSWORD=yourpassword
 - Đẩy command vào Redis queue (`telegrambot_default_queue`).  
 - Worker (`jobs/defaultQueue.js`) sẽ lấy job để xử lý.  
 - pm2 giữ cho bot và worker luôn chạy ổn định.
+
+## Đóng góp
+
+Mọi đóng góp đều được hoan nghênh! Hãy tạo pull request hoặc mở issue.
+
+## Tác giả
+
+- **Khaizinam**  
+- GitHub Repo: [https://github.com/khaizinam/telegram-bot](https://github.com/khaizinam/telegram-bot)  
+- GitHub Profile: [https://github.com/khaizinam](https://github.com/khaizinam)  
+- Website: [my.khaizinam.site](https://my.khaizinam.site)
