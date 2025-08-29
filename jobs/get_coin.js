@@ -67,12 +67,18 @@ async function run() {
   }
 };
 
-// Cron chạy mỗi 1 phút
-cron.schedule('*/5 * * * *', async () => {
+async function runCron() {
   try {
-    await run();
+    await run(); // chạy ngay lần đầu
   } catch (err) {
     console.error('Lỗi khi chạy cron:', err);
   }
-});
-console.log('Cron đã được lên lịch chạy mỗi 5 phút');
+}
+
+// Chạy lần đầu ngay khi start
+runCron();
+
+// Lên lịch chạy mỗi 5 phút sau đó
+cron.schedule('*/5 * * * *', runCron);
+
+console.log('Cron đã được lên lịch chạy mỗi 5 phút và chạy ngay lần đầu');
