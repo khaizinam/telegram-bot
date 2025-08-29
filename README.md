@@ -66,12 +66,7 @@ npm install -g pm2
 
 Start bot:
 ```bash
-pm2 start yarn --name telebot -- dev
-```
-
-Start queue worker:
-```bash
-pm2 start npm --name telebot-queue -- run jobs/defaultQueue.js
+pm2 start
 ```
 
 Xem danh sách process:
@@ -81,8 +76,18 @@ pm2 ls
 
 Theo dõi log:
 ```bash
-pm2 logs telebot
-pm2 logs telebot-queue
+pm2 logs app-dev
+pm2 logs queue-default
+```
+
+Rebuild lại sau khi change code:
+```bash
+pm2 restart all
+```
+
+Stop PM2:
+```bash
+pm2 dell all
 ```
 
 ---
@@ -106,15 +111,6 @@ Redis chạy mặc định ở `127.0.0.1:6379`.
 Nếu có password, sửa `.env` với:
 ```env
 REDIS_PASSWORD=yourpassword
-```
-
-Test kết nối:
-```bash
-redis-cli ping
-```
-Kết quả phải trả về:
-```
-PONG
 ```
 
 ---
