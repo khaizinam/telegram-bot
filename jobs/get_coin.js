@@ -39,6 +39,7 @@ async function run() {
       low24h,
     });
 
+    console.log("Current price " + currentPrice);
     if (!needNotify) return;
 
     // Lấy danh sách tất cả room cần notify
