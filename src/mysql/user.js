@@ -1,5 +1,14 @@
 const { pool } = require('./pool');
-
+/**
+ * TABLE: app_users
+ * id bigint
+ * user_id varchar
+ * user_name varchar
+ * nickname varchar
+ * last_hunt timestamp
+ * created_at datetime
+ * updated_at datetime
+ */
 async function findUserByTelegramId(userId) {
   const [rows] = await pool.execute('SELECT * FROM app_users WHERE user_id = ?', [userId]);
   return rows.length > 0 ? rows[0] : null;
@@ -7,8 +16,8 @@ async function findUserByTelegramId(userId) {
 
 async function createUser(userId, username, nickname) {
   await pool.execute(`
-    INSERT INTO app_users (user_id, user_name, nickname, created_at, updated_at)
-    VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    INSERT INTO app_users (user_id, user_name, nickname, created_at, updated_at, last_hunt)
+    VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL)
   `, [userId, username, nickname]);
 }
 
@@ -32,8 +41,8 @@ async function getUserList(page = 1, perPage = 10) {
         SELECT user_name, user_id, created_at, updated_at
         FROM app_users
         ORDER BY created_at DESC
-        LIMIT ? OFFSET ?
-    `, [perPage, offset]);
+        LIMIT ${perPage} OFFSET ${offset}
+    `);
 
     return { total, users };
 }

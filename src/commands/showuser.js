@@ -1,5 +1,6 @@
 // commands/showuser.js
 const { getUserList } = require('../mysql/user');
+const { sendMessage } = require('../utils/prepare');
 
 module.exports = {
     alias: 'showuser',
@@ -22,11 +23,10 @@ module.exports = {
                 message += `Đăng ký: _${user.created_at}_\n`;
                 message += `Lần cuối: _${user.updated_at}_\n\n`;
             });
-
-            await bot.sendMessage(chatId, message.trim(), { parse_mode: 'Markdown' });
+            await sendMessage(bot, message.trim(), msg, { parse_mode: 'Markdown' });
         } catch (err) {
             console.error('❌ DB ERROR:', err);
-            await bot.sendMessage(chatId, '❌ Không thể truy vấn danh sách user.');
+            await sendMessage(bot, '❌ Không thể truy vấn danh sách user.', msg);
         }
     }
 };

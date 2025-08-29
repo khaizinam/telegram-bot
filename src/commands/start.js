@@ -1,5 +1,6 @@
 // commands/start.js
 const fs = require('fs');
+const { sendMessage } = require('../utils/prepare');
 
 module.exports = {
   alias: 'start',
@@ -34,7 +35,6 @@ module.exports = {
       }
       message += '\n';
     }
-
-    await bot.sendMessage(chatId, message.trim(), { parse_mode: 'Markdown' });
+    await sendMessage(bot,  message.trim(), msg, { parse_mode: 'Markdown' });
   }
 };

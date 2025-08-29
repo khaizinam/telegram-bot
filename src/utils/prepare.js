@@ -15,6 +15,14 @@ async function prepareUser(telegramUser) {
   }
 }
 
+async function sendMessage(bot, replyText, msg, opts = {}){
+    if (msg.message_thread_id) {
+        opts.message_thread_id = msg.message_thread_id;
+    }
+    await bot.sendMessage(msg.chat.id, replyText, opts);
+}
+
 module.exports = {
   prepareUser,
+  sendMessage
 };

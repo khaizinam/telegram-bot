@@ -47,14 +47,13 @@ bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text?.trim();
   if (!text || !text.startsWith('/')) return;
-
+  const chatType = msg.chat.type; // private | group | supergroup | channel
+  const chatTitle = msg.chat.title || `${msg.from.first_name} ${msg.from.last_name || ''}`.trim();
+  console.log(`📌 Nhận command từ chat: ${chatType} - ${chatTitle} (ID: ${chatId})`);
   prepareUser(msg.from);
-
   const job = {
     event: 'run_command',
-    chatId,
-    text,
-    user: msg.from
+    data: msg
   };
   console.log("Add new to queue");
   await redis.rPush('telegrambot_default_queue', JSON.stringify(job));

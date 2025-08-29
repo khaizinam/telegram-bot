@@ -1,3 +1,5 @@
+const { sendMessage } = require("../utils/prepare");
+
 module.exports = {
   alias: 'help',
   group: 'general',
@@ -13,9 +15,9 @@ module.exports = {
     try {
       const command = require(`./${commandName}.js`);
       const message = `*Lệnh:* /${command.alias}\n*Nhóm:* ${command.group}\n*Mô tả:* ${command.desc}`;
-      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+      await sendMessage(bot,  message, msg, { parse_mode: 'Markdown' })
     } catch (err) {
-      await bot.sendMessage(chatId, `❌ Không tìm thấy lệnh *${commandName}*`, { parse_mode: 'Markdown' });
+      await sendMessage(bot,  `❌ Không tìm thấy lệnh *${commandName}*`, msg, { parse_mode: 'Markdown' })
     }
   }
 };

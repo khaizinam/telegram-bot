@@ -1,5 +1,6 @@
 const path = require("path");
 const bot = require("../../bot");
+const _ = require("lodash");
 
 const colors = {
   green: (msg) => `\x1b[32m${msg}\x1b[0m`,
@@ -12,31 +13,30 @@ function now() {
 }
 
 module.exports = async function (job) {
-  const { chatId, text, user } = job;
-
-  if (!text || !chatId || !user || !text.startsWith("/")) {
+  const { data } = job;
+  text = _.get(data, 'text', null);
+  if (!text || !text.startsWith("/")) {
     console.log(colors.yellow(`[${now()}] ⚠️ Invalid command job.`));
     return;
   }
-
+  // get prefix from message
   const parts = text.trim().split(" ");
   const cmdName = parts[0].substring(1);
   const args = parts.slice(1);
-
   try {
+    // load command file.
     const commandPath = path.join(__dirname, `../../commands/${cmdName}.js`);
     const command = require(commandPath);
-
-    const msg = {
-      chat: { id: chatId },
-      from: user,
-      text,
-    };
-
-    await command.handler(msg, args, bot);
+    // excute command.
+    await command.handler(data, args, bot);
     console.log(colors.green(`[${now()}] ✅ Executed command: /${cmdName}`));
   } catch (err) {
     console.error(colors.red(`[${now()}] ❌ Error running /${cmdName}:`), err);
-    await bot.sendMessage(chatId, "❌ Có lỗi xảy ra khi xử lý lệnh.");
+    // for send topc && chat group
+    const opts = {};
+    if (data?.is_topic_message) {
+      opts.message_thread_id = msg.message_thread_id;
+    }
+    await bot.sendMessage(chatId, "❌ Có lỗi xảy ra khi xử lý lệnh.", opts);
   }
 };
