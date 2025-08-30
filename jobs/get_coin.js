@@ -5,65 +5,75 @@ const bot = require('../src/bot.js');
 const { getLastCoinPrice, insertCoinPrice, getActiveNotify } = require("../src/mysql/crypto.js");
 const cron = require('node-cron');
 
+const coinids = [
+  "TON-USDT",
+  "BTC-USDT",
+  "DUCK-USDT"
+];
+
+const PRICE_NOTIFY = 1;
+
 async function run() {
-  console.log("Start running.");
-  try {
-    const coinid = "TON-USDT";
-    const data = await getPrice(coinid);
+  console.log("start running.");
+  for (const [i, coinid] of coinids.entries()) {
+    console.log(`${i}. Get update with ${coinid} start:`);
+    try {
+      const data = await getPrice(coinid);
 
-    if (!data || !data.data || data.data.length === 0) return;
-    const ticker = data.data[0];
+      if (!data || !data.data || data.data.length === 0) return;
+      const ticker = data.data[0];
 
-    const currentPrice = parseFloat(ticker.last);
-    const high24h = parseFloat(ticker.high24h);
-    const low24h = parseFloat(ticker.low24h);
+      const currentPrice = parseFloat(ticker.last);
+      const high24h = parseFloat(ticker.high24h);
+      const low24h = parseFloat(ticker.low24h);
 
-    // Lấy giá lần cập nhật trước trong DB
-    const lastRow = await getLastCoinPrice(coinid);
+      // Lấy giá lần cập nhật trước trong DB
+      const lastRow = await getLastCoinPrice(coinid);
 
-    let needNotify = false;
-    let diff = 0; // phần trăm so với lần trước
-    if (lastRow) {
-      const lastData = JSON.parse(lastRow.data_json);
-      const lastPrice = parseFloat(lastData.currentPrice);
-      diff = ((currentPrice - lastPrice) / lastPrice) * 100;
-      if (Math.abs(diff) >= 1) needNotify = true; // chỉ thông báo khi thay đổi ≥1%
-    } else {
-      needNotify = true; // lần đầu insert
+      let needNotify = false;
+      let diff = 0; // phần trăm so với lần trước
+      if (lastRow) {
+        const lastData = JSON.parse(lastRow.data_json);
+        const lastPrice = parseFloat(lastData.currentPrice);
+        diff = ((currentPrice - lastPrice) / lastPrice) * 100;
+        if (Math.abs(diff) >= PRICE_NOTIFY) needNotify = true; // chỉ thông báo khi thay đổi ≥1%
+      } else {
+        needNotify = true; // lần đầu insert
+      }
+
+      console.log("Current price " + currentPrice);
+      
+      if (!needNotify) continue;
+
+      await insertCoinPrice(coinid, {
+        currentPrice,
+        high24h,
+        low24h,
+      });
+
+      // Lấy danh sách tất cả room cần notify
+      const notifyList = await getActiveNotify(coinid);
+
+      const trend = diff > 0 ? "📈 Tăng" : "📉 Giảm";
+
+      let txt = `⚡ Thông báo giá thay đổi\n`
+      + `- Đồng: ${coinid}\n`
+      + `- Giá hiện tại: ${currentPrice} USDT\n`
+      + `- ${trend} ${diff.toFixed(2)}%\n`
+      + `- Thời gian: ${new Date().toLocaleString("vi-VN")}\n`
+      + `- Cao nhất 24h: ${high24h}\n`
+      + `- Thấp nhất 24h: ${low24h}`;
+
+      for (const row of notifyList) {
+        const opts = {};
+        if (row.thread_id) opts.message_thread_id = row.thread_id;
+        await bot.sendMessage(row.chat_id, txt, opts);
+      }
+
+    } catch (err) {
+      console.error(err);
+      continue;
     }
-
-    console.log("Current price " + currentPrice);
-    
-    if (!needNotify) return;
-
-    await insertCoinPrice(coinid, {
-      currentPrice,
-      high24h,
-      low24h,
-    });
-
-    // Lấy danh sách tất cả room cần notify
-    const notifyList = await getActiveNotify(coinid);
-
-    const trend = diff > 0 ? "📈 Tăng" : "📉 Giảm";
-
-    const txt = `
-⚡ Thông báo giá thay đổi
-- Đồng: ${coinid}
-- Giá hiện tại: ${currentPrice} USDT
-- ${trend} ${diff.toFixed(2)}%
-- Thời gian: ${new Date().toLocaleString("vi-VN")}
-- Cao nhất 24h: ${high24h}
-- Thấp nhất 24h: ${low24h}
-    `;
-
-    for (const row of notifyList) {
-      const opts = {};
-      if (row.thread_id) opts.message_thread_id = row.thread_id;
-      await bot.sendMessage(row.chat_id, txt, opts);
-    }
-  } catch (err) {
-    console.error("Error in run:", err);
   }
 };
 

@@ -5,19 +5,19 @@ module.exports = {
     group: 'general',
     desc: 'Show Current Group/User info',
     handler: async (msg, match, bot) => {
-        const chatType = msg.chat.type; // private | group | supergroup | channel
         let replyText = "📌 Thông tin hiện tại.\n";
-
-        if (chatType === 'private') {
+        const botInfo = await bot.getMe();
+        replyText += `- Bot Username: ${botInfo.username}\n`;
+        replyText += `- Bot Name: ${botInfo.first_name}\n`;
+        replyText += `- Your User ID: ${msg.from.id}\n`;
+        replyText += `- Your Name: ${msg.from.first_name} ${msg.from.last_name || ''}`.trim();
+        if (msg.chat.type === 'private') {
             // Nếu là user
-            replyText += `- User ID: ${msg.from.id}\n`;
-            replyText += `- Name: ${msg.from.first_name} ${msg.from.last_name || ''}`.trim();
         } else {
             // Nếu là group/supergroup/channel
             replyText += `- Chat Name: ${msg.chat.title}\n`;
             replyText += `- Chat ID: ${msg.chat.id}\n`;
             replyText += `- Chat Type: ${chatType}\n`;
-
             // Nếu có topic
             if (msg.message_thread_id) {
                 let topicName = null;

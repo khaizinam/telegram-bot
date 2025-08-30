@@ -2,9 +2,8 @@ module.exports = {
   apps: [
     {
       name: "app-dev",
-      script: "yarn",
-      args: "dev",
-      interpreter: "node",
+      script: "npm",
+      args: "run dev",
       watch: false,
       out_file: "./logs/pm2/app-dev-out.log",
       error_file: "./logs/pm2/app-dev-error.log",

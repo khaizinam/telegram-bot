@@ -6,6 +6,7 @@ module.exports = {
     alias: 'showuser',
     group: 'general',
     desc: 'Xem danh sách người dùng đã kết nối',
+    hide: true,
     handler: async (msg, args, bot) => {
         const chatId = msg.chat.id;
         const page = parseInt(args[0]) || 1;

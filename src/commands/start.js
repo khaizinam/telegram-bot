@@ -8,7 +8,6 @@ module.exports = {
   desc: 'Giới thiệu bot và liệt kê các lệnh đang có',
   usage: '/start',
   handler: async (msg, args, bot) => {
-    const chatId = msg.chat.id;
     const username = msg.from.username || 'người dùng';
 
     // Đọc danh sách command
@@ -19,7 +18,7 @@ module.exports = {
       if (file.endsWith('.js')) {
         const command = require(`./${file}`);
         if (!command.alias || !command.group || !command.desc) continue;
-
+        if (command.hide) continue;
         if (!groups[command.group]) groups[command.group] = [];
         groups[command.group].push({ alias: command.alias, desc: command.desc });
       }

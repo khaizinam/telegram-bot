@@ -6,14 +6,8 @@ module.exports = {
   group: 'crypto',
   desc: 'Xem giá coin. Ví dụ: /coinprice TON-USDT',
   handler: async (msg, args, bot) => {
-    let coinid = args[0];
-
-    if (!coinid) {
-      coinid = "TON-USDT";
-    }
-
-    coinid = coinid.trim();
-
+    let coinid = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
+    
     try {
       let data = await getPrice(coinid);
       if (!data || !data.data || !data.data[0]) {

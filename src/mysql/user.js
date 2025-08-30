@@ -1,4 +1,4 @@
-const { pool } = require('./pool');
+const { pool, TABLES } = require('./pool');
 /**
  * TABLE: ${TABLES.USER.name}
  * id bigint

@@ -19,9 +19,29 @@ module.exports = async function (job) {
     console.log(colors.yellow(`[${now()}] ⚠️ Invalid command job.`));
     return;
   }
+
+  // get prefix from message
   // get prefix from message
   const parts = text.trim().split(" ");
-  const cmdName = parts[0].substring(1);
+  let cmdName = parts[0].substring(1);
+  // Nếu có dấu @ thì chỉ lấy phần trước @ và check bot name
+  if (cmdName.includes("@")) {
+    const [cmd, botTag] = cmdName.split("@");
+    // Lấy username bot thật từ bot instance
+    const botInfo = await bot.getMe();
+    console.log(botInfo);
+    const myBotName = botInfo.username;
+    console.log(myBotName);
+    if (!myBotName) {
+      console.warn(colors.yellow(`[${now()}] ⚠️ Bot username chưa được cấu hình.`));
+    }
+    if (botTag.toLowerCase() !== myBotName.toLowerCase()) {
+      console.log(colors.yellow(`[${now()}] ⏭ Bỏ qua lệnh vì tag bot khác: @${botTag}`));
+      return;
+    }
+    cmdName = cmd;
+  }
+
   const args = parts.slice(1);
   try {
     // load command file.
