@@ -12,7 +12,8 @@ module.exports = {
             replyText += `- Bot Name: ${botInfo.first_name}\n`;
             replyText += `- Your User ID: ${msg.from.id}\n`;
             replyText += `- Your Name: ${msg.from.first_name} ${msg.from.last_name || ''}`.trim();
-            if (msg.chat.type === 'private') {
+            const chatType = msg.chat.type;
+            if (chatType === 'private') {
                 // Nếu là user
             } else {
                 // Nếu là group/supergroup/channel
