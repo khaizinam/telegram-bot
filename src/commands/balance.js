@@ -1,6 +1,5 @@
 const { getBalance } = require("../utils/okx");
 const { sendMessage } = require("../utils/prepare");
-const order = require("./orders");
 
 module.exports = {
   alias: 'balance',
@@ -10,7 +9,7 @@ module.exports = {
   handler: async (msg, args, bot) => {
     try {
       const coinid = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
-      const orders = await getBalance(coinid);
+      const bal = await getBalance(coinid);
       
       if (!bal) {
         return await sendMessage(bot, `❌ Không lấy được số dư ${coinid}`, msg);
