@@ -49,7 +49,7 @@ module.exports = {
             replyText += "© 2025 khaizinam. All rights reserved.\n";
             replyText += "━━━━━━━━━━━━━━━";
 
-            await bot.sendMessage(msg.chat.id, replyText, {
+            await sendMessage(bot, replyText, msg, {
                 reply_markup: {
                     inline_keyboard: [
                         [
