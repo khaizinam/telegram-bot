@@ -47,6 +47,10 @@ module.exports = async function (job) {
   try {
     // load command file.
     const commandPath = path.join(__dirname, `../../commands/${cmdName}.js`);
+    // ✅ Kiểm tra file tồn tại trước khi require
+    if (!fs.existsSync(commandPath)) {
+      return;
+    }
     const command = require(commandPath);
     // excute command.
     await command.handler(data, args, bot);
