@@ -1,5 +1,6 @@
 const path = require("path");
 const bot = require("../../bot");
+const fs = require("fs");
 const _ = require("lodash");
 const { sendMessage } = require("../../utils/prepare");
 
