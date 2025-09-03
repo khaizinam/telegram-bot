@@ -6,25 +6,27 @@ module.exports = {
     desc: 'Show Current Group/User info',
     handler: async (msg, match, bot) => {
         try {
-            let replyText = "📌 Thông tin hiện tại.\n";
             const botInfo = await bot.getMe();
-            replyText += `- Bot Username: ${botInfo.username}\n`;
-            replyText += `- Bot Name: ${botInfo.first_name}\n`;
-            replyText += `- Your User ID: ${msg.from.id}\n`;
-            replyText += `- Your Name: ${msg.from.first_name} ${msg.from.last_name || ''}`.trim();
+
+            let replyText = "━━━━━━━━━━━━━━━\n";
+            replyText += "🤖 BOT THÔNG TIN HIỆN TẠI\n";
+            replyText += "━━━━━━━━━━━━━━━\n";
+            replyText += `- 🔹 Bot Name: ${botInfo.first_name}\n`;
+            replyText += `- 🔹 Bot Username: @${botInfo.username}\n\n`;
+
+            replyText += "👤 NGƯỜI DÙNG\n";
+            replyText += `- ID: ${msg.from.id}\n`;
+            replyText += `- Tên: ${msg.from.first_name} ${msg.from.last_name || ""}\n\n`;
+
             const chatType = msg.chat.type;
-            if (chatType === 'private') {
-                // Nếu là user
-            } else {
-                // Nếu là group/supergroup/channel
-                replyText += `- Chat Name: ${msg.chat.title}\n`;
+            if (chatType !== "private") {
+                replyText += "💬 NHÓM CHAT\n";
+                replyText += `- Tên: ${msg.chat.title}\n`;
                 replyText += `- Chat ID: ${msg.chat.id}\n`;
-                replyText += `- Chat Type: ${chatType}\n`;
-                // Nếu có topic
+                replyText += `- Kiểu: ${chatType}\n\n`;
+
                 if (msg.message_thread_id) {
                     let topicName = null;
-
-                    // Khi nhận tin đầu tiên tạo topic, Telegram có field forum_topic_created
                     if (msg.forum_topic_created) {
                         topicName = msg.forum_topic_created.name;
                     } else if (
@@ -33,16 +35,33 @@ module.exports = {
                     ) {
                         topicName = msg.reply_to_message.forum_topic_created.name;
                     }
-
-                    replyText += `- Topic ID: ${msg.message_thread_id}\n`;
+                    replyText += "🧩 CHỦ ĐỀ\n";
+                    replyText += `- ID: ${msg.message_thread_id}\n`;
                     if (topicName) {
-                        replyText += `- Topic Name: ${topicName}\n`;
+                        replyText += `- Tên: ${topicName}\n`;
                     }
+                    replyText += "\n";
                 }
             }
-            await sendMessage(bot, replyText, msg);
+
+            replyText += "━━━━━━━━━━━━━━━\n";
+            replyText += "🌟 Sản phẩm được phát triển bởi **khaizinam**\n";
+            replyText += "© 2025 khaizinam. All rights reserved.\n";
+            replyText += "━━━━━━━━━━━━━━━";
+
+            await bot.sendMessage(msg.chat.id, replyText, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "🌍 Website", url: "https://my.khaizinam.site" },
+                            { text: "💻 GitHub", url: "https://github.com/khaizinam" }
+                        ]
+                    ]
+                },
+                parse_mode: "Markdown"
+            });
         } catch (error) {
-            await sendMessage(bot, `Xảy ra lỗi:\n${error.message}`, msg);
+            await sendMessage(bot, `❌ Xảy ra lỗi:\n${error.message}`, msg);
         }
     }
 };
