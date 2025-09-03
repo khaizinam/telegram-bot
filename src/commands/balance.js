@@ -8,7 +8,7 @@ module.exports = {
   hide: true,
   handler: async (msg, args, bot) => {
     try {
-      const coinid = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
+      const coinid = args[0] ? args[0].trim().toUpperCase() : "TON";
       const bal = await getBalance(coinid);
       
       if (!bal) {
