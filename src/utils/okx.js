@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const axios = require("axios");
- 
+
 const baseUrl = "https://www.okx.com";
 
 // Hàm ký
@@ -40,23 +40,107 @@ async function okxRequest(method, path, body = "") {
 // Lấy giá hiện tại
 async function getPrice(id = "TON-USDT") {
   const path = `/api/v5/market/ticker?instId=${id}`;
+  return await okxRequest("GET", path);
+}
+
+// Lấy số dư TON trong ví (spot)
+async function getBalance(ccy = "TON") {
+  const path = `/api/v5/account/balance?ccy=${ccy}`;
   const data = await okxRequest("GET", path);
-  return data;
+  try {
+    const balance = data.data[0].details.find((d) => d.ccy === ccy);
+    return {
+      available: balance.availBal,
+      total: balance.cashBal,
+    };
+  } catch (err) {
+    console.error("Không lấy được số dư:", data);
+    return null;
+  }
 }
 
-// Đặt lệnh mua
-async function placeOrder() {
+// Đặt lệnh mua (limit/market)
+async function buyTON(sz = "1", price = null) {
   const order = {
-    instId: "TON-USDT", // Cặp giao dịch
-    tdMode: "cash",     // "cross" hoặc "isolated" cho futures/margin
-    side: "buy",        // buy hoặc sell
-    ordType: "limit",   // limit hoặc market
-    px: "4.5",          // giá đặt mua
-    sz: "1",            // số lượng
+    instId: "TON-USDT",
+    tdMode: "cash",
+    side: "buy",
+    ordType: price ? "limit" : "market",
+    sz: sz,
   };
+  if (price) order.px = price;
 
-  const data = await okxRequest("POST", "/api/v5/trade/order", order);
-  console.log("Kết quả đặt lệnh:", data);
+  return await okxRequest("POST", "/api/v5/trade/order", order);
 }
 
-module.exports = { sign, okxRequest, getPrice, placeOrder };
+// Đặt lệnh bán (limit/market)
+async function sellTON(sz = "1", price = null) {
+  const order = {
+    instId: "TON-USDT",
+    tdMode: "cash",
+    side: "sell",
+    ordType: price ? "limit" : "market",
+    sz: sz,
+  };
+  if (price) order.px = price;
+
+  return await okxRequest("POST", "/api/v5/trade/order", order);
+}
+
+// Đặt lệnh bán toàn bộ TON hiện có (market)
+async function sellAllTON() {
+  const bal = await getBalance("TON");
+  if (!bal) return;
+
+  const sz = bal.available;
+  if (parseFloat(sz) <= 0) {
+    console.log("Không có TON để bán.");
+    return;
+  }
+
+  return await sellTON(sz);
+}
+
+// Lấy danh sách lệnh đang mở (chưa khớp hết)
+async function getOpenOrders(instId = "TON-USDT") {
+  const path = `/api/v5/trade/orders-pending?instId=${instId}`;
+  return await okxRequest("GET", path);
+}
+
+// Hủy 1 lệnh theo orderId
+async function cancelOrder(orderId, instId = "TON-USDT") {
+  const body = {
+    instId: instId,
+    ordId: orderId,
+  };
+  return await okxRequest("POST", "/api/v5/trade/cancel-order", body);
+}
+
+// Hủy tất cả lệnh chưa khớp của 1 cặp
+async function cancelAllOrders(instId = "TON-USDT") {
+  const orders = await getOpenOrders(instId);
+  if (!orders.data || orders.data.length === 0) {
+    console.log("Không có lệnh nào để hủy.");
+    return;
+  }
+
+  const results = [];
+  for (const order of orders.data) {
+    const res = await cancelOrder(order.ordId, instId);
+    results.push(res);
+  }
+  return results;
+}
+
+module.exports = {
+  sign,
+  okxRequest,
+  getPrice,
+  getBalance,
+  buyTON,
+  sellTON,
+  sellAllTON,
+  getOpenOrders,
+  cancelOrder,
+  cancelAllOrders,
+};

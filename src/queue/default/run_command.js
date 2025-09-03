@@ -1,6 +1,7 @@
 const path = require("path");
 const bot = require("../../bot");
 const _ = require("lodash");
+const { sendMessage } = require("../../utils/prepare");
 
 const colors = {
   green: (msg) => `\x1b[32m${msg}\x1b[0m`,
@@ -55,8 +56,8 @@ module.exports = async function (job) {
     // for send topc && chat group
     const opts = {};
     if (data?.is_topic_message) {
-      opts.message_thread_id = msg.message_thread_id;
+      opts.message_thread_id = data.message_thread_id;
     }
-    await bot.sendMessage(chatId, "❌ Có lỗi xảy ra khi xử lý lệnh.", opts);
+    await sendMessage(bot, "❌ Có lỗi xảy ra khi xử lý lệnh.\n" + err.message ,data, opts);
   }
 };
