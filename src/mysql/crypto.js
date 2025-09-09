@@ -62,7 +62,7 @@ module.exports = {
     const [rows] = await pool.query(
       `SELECT id, data_json, created_at 
        FROM ${TABLES.COIN_MARKET.name} 
-       WHERE coinid = ? ORDER BY created_at DESC LIMIT 1`,
+       WHERE coinid = ? ORDER BY updated_at DESC LIMIT 1`,
       [coinid]
     );
     return rows[0] || null;
