@@ -50,11 +50,11 @@ async function run() {
 
       const trend = diff > 0 ? "📈 Tăng" : "📉 Giảm";
 
-    let txt = `⚡ *${coinid} - ${currentPrice}*\n`
-      + `- ${trend} *${diff.toFixed(2)}%*\n`
-      + `- Thời gian: *${new Date().toLocaleString("vi-VN")}*\n`
-      + `- Cao nhất 24h: *${high24h}*\n`
-      + `- Thấp nhất 24h: *${low24h}*`;
+      let txt = `⚡ *${coinid} - ${currentPrice}*\n`
+        + `- ${trend} *${diff.toFixed(2)}%*\n`
+        + `- Thời gian: *${new Date().toLocaleString("vi-VN")}*\n`
+        + `- Cao nhất 24h: *${high24h}*\n`
+        + `- Thấp nhất 24h: *${low24h}*`;
 
       for (const row of notifyList) {
         const opts = {parse_mode: 'Markdown'};
