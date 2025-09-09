@@ -63,7 +63,7 @@ async function run() {
       + `- Thấp nhất 24h: *${low24h}*`;
 
       for (const row of notifyList) {
-        const opts = {};
+        const opts = {parse_mode: 'Markdown'};
         if (row.thread_id) opts.message_thread_id = row.thread_id;
         await bot.sendMessage(row.chat_id, txt, opts);
       }
