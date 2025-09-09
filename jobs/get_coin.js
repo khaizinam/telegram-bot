@@ -8,7 +8,7 @@ const cron = require('node-cron');
 const coinids = [
   "TON-USDT",
   "BTC-USDT",
-  "DUCK-USDT"
+  "XAUT-USDT"
 ];
 
 const PRICE_NOTIFY = 1;
