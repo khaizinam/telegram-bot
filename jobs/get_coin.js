@@ -2,19 +2,13 @@
 require("dotenv").config();
 const { getPrice } = require("../src/utils/okx.js");
 const bot = require('../src/bot.js');
-const { getLastCoinPrice, insertCoinPrice, getActiveNotify } = require("../src/mysql/crypto.js");
+const { getLastCoinPrice, insertCoinPrice, getActiveNotify, getActiveCoinIds } = require("../src/mysql/crypto.js");
 const cron = require('node-cron');
 
-const coinids = [
-  "TON-USDT",
-  "BTC-USDT",
-  "XAUT-USDT"
-];
-
 const PRICE_NOTIFY = 1;
-
 async function run() {
   console.log("start running.");
+  const coinids = await getActiveCoinIds();
   for (const [i, coinid] of coinids.entries()) {
     console.log(`${i}. Get update with ${coinid} start:`);
     try {

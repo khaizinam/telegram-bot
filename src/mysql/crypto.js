@@ -119,6 +119,15 @@ async function getActiveNotify(coinid) {
   return rows;
 }
 
+async function getActiveCoinIds() {
+  const [rows] = await pool.query(
+    `SELECT DISTINCT coinid 
+     FROM ${TABLES.MARKET_NOTIFY.name} 
+     WHERE status = 'active'`
+  );
+  return rows.map(r => r.coinid);
+}
+
 module.exports = {
   get_market_notify,
   add_market_notify,
@@ -126,5 +135,6 @@ module.exports = {
   get_active_notify_by_coin,
   getActiveNotify,
   insertCoinPrice,
-  getLastCoinPrice
+  getLastCoinPrice,
+  getActiveCoinIds
 };
