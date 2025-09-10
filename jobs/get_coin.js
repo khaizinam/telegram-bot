@@ -95,11 +95,14 @@ async function notifyDaily(coinid) {
     const newData = await fetchCoinData(coinid);
     if (!newData) return;
     const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
-    `💎 CoinID: <code>${coinid}</code>\n` +
-    `💰 Price: <code>${formatPrice(newData.currentPrice)} USDT</code> - (<code>${convertToVND(newData.currentPrice)}</code> VND)\n` +
-    `⏰ Time: <code>${getTimeNow()}</code>\n` +
-    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
-    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
+    `--------------------------\n` +
+    `💎 CoinID: <code>${coinid}</code>\n\n` +
+    `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n\n` +
+    `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n\n` +
+    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n\n` +
+    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>\n\n`+
+    `--------------------------\n`+
+    `⏰ ${getTimeNow()}\n\n`;
     const notifyList = await getActiveNotify(coinid);
     for (const row of notifyList) {
       const opts = { parse_mode: 'HTML' };
