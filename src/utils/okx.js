@@ -143,4 +143,16 @@ module.exports = {
   getOpenOrders,
   cancelOrder,
   cancelAllOrders,
+  formatPrice: function (price) {
+    try {
+      const num = Number(price);
+      if (isNaN(num)) {
+        return price;
+      }
+      return num.toLocaleString("vi-VN", { maximumFractionDigits: 2 });
+    } catch (e) {
+      console.error("formatPrice error:", e);
+      return price;
+    }
+  }
 };

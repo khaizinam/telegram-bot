@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { getPrice } = require("../src/utils/okx.js");
+const { getPrice, formatPrice } = require("../src/utils/okx.js");
 const bot = require('../src/bot.js');
 const {
   getLastCoinPrice,
@@ -10,7 +10,7 @@ const {
 } = require("../src/mysql/crypto.js");
 const cron = require('node-cron');
 
-const PRICE_NOTIFY = 1; // 1%
+const PRICE_NOTIFY = 0.5; // 1%
 
 async function fetchCoinData(coinid) {
   const data = await getPrice(coinid);
@@ -51,11 +51,11 @@ async function processCoin(coinid, index) {
     const notifyList = await getActiveNotify(coinid);
     const trend = diff > 0 ? "📈 Tăng" : "📉 Giảm";
 
-    const txt = `⚡ *${coinid} - ${newData.currentPrice}*\n` +
+    const txt = `⚡ *${coinid} - ${formatPrice(newData.currentPrice)}*\n` +
                 `- ${trend} *${diff.toFixed(2)}%*\n` +
                 `- Thời gian: *${new Date().toLocaleString("vi-VN")}*\n` +
-                `- Cao nhất 24h: *${newData.high24h}*\n` +
-                `- Thấp nhất 24h: *${newData.low24h}*`;
+                `- Cao nhất 24h: *${formatPrice(newData.high24h)}*\n` +
+                `- Thấp nhất 24h: *${formatPrice(newData.low24h)}*`;
 
     for (const row of notifyList) {
       const opts = { parse_mode: 'Markdown' };
