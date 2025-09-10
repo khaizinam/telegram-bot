@@ -99,8 +99,8 @@ async function notifyDaily(coinid) {
     `--------------------------\n` +
     `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
     `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
-    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
-    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>\n`+
+    `📉 Min(24h): <code>${formatPrice(newData.low24h)}</code> USDT\n` +
+    `📈 Max(24h): <code>${formatPrice(newData.high24h)}</code> USDT\n`+
     `--------------------------\n\n`+
     `⏰ ${getTimeNow()} - OKX Market Price.\n\n`;
 
