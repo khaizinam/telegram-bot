@@ -96,7 +96,7 @@ async function notifyDaily(coinid) {
     if (!newData) return;
     const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
     `--------------------------\n` +
-    `💎 CoinID: <code>${coinid}</code>\n\n` +
+    `💎 CoinID: ${coinid}>\n\n` +
     `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n\n` +
     `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n\n` +
     `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n\n` +
@@ -125,11 +125,5 @@ async function runDaily() {
     console.error('Run error:', err);
   }
 }
-
-async function runCronDaily() {
-  await runDaily();
-}
-
-runCronDaily();
 
 cron.schedule('0 */2 * * *', runDaily);
