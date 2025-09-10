@@ -50,11 +50,16 @@ async function processCoin(coinid, index) {
     const notifyList = await getActiveNotify(coinid);
     const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
-    const txt = `[*${coinid}*] <code>${formatPrice(newData.currentPrice)} USDT</code> - (<code>${convertToVND(newData.currentPrice)}</code> VND)\n` +
-    `${trend} <code>${diff.toFixed(2)}%</code>\n` +
-    `⏰ Time: <code>${getTimeNow()}</code>\n` +
-    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
-    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
+    const txt = '⚠ <strong>Thông báo giá thay đổiy</strong>\n\n' +
+    `💎 <strong>${coinid}<\strong>\n\n` +
+    `-------------------\n` +
+    `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
+    `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
+    `${trend} <strong>${diff.toFixed(2)}%</strong>\n` +
+    `📉 Min(24h): <strong>${formatPrice(newData.low24h)} USDT</strong>\n` +
+    `📈 Max(24h): <strong>${formatPrice(newData.high24h)} USDT</strong>\n` +
+    `\n-------------------\n` +
+    `⏰ ${getTimeNow()} - OKX Market price\n`;
 
     for (const row of notifyList) {
       const opts = { parse_mode: 'HTML' };
