@@ -100,6 +100,7 @@ async function notifyDaily(coinid) {
     `⏰ Time: <code>${getTimeNow()}</code>\n` +
     `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
     `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
+    const notifyList = await getActiveNotify(coinid);
     for (const row of notifyList) {
       const opts = { parse_mode: 'HTML' };
       if (row.thread_id) opts.message_thread_id = row.thread_id;
