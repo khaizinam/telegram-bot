@@ -94,15 +94,16 @@ async function notifyDaily(coinid) {
   try {
     const newData = await fetchCoinData(coinid);
     if (!newData) return;
-    const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
+    const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n' +
+    `💎 ${coinid}>\n` +
     `--------------------------\n` +
-    `💎 CoinID: ${coinid}>\n\n` +
-    `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n\n` +
-    `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n\n` +
-    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n\n` +
-    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>\n\n`+
-    `--------------------------\n`+
-    `⏰ ${getTimeNow()}\n\n`;
+    `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
+    `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
+    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
+    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>\n`+
+    `--------------------------\n\n`+
+    `⏰ ${getTimeNow()} - OKX Market Price.\n\n`;
+
     const notifyList = await getActiveNotify(coinid);
     for (const row of notifyList) {
       const opts = { parse_mode: 'HTML' };
