@@ -50,7 +50,7 @@ async function processCoin(coinid, index) {
     const notifyList = await getActiveNotify(coinid);
     const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
-    const txt = '⚠ <strong>Thông báo giá thay đổiy</strong>\n\n' +
+    const txt = '⚠ <strong>Thông báo giá thay đổi</strong>\n\n' +
     `💎 <strong>${coinid}</strong>\n\n` +
     `-------------------\n` +
     `💰 USDT: ${formatPrice(newData.currentPrice)}\n` +
