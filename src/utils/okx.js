@@ -166,5 +166,14 @@ module.exports = {
       minute: "2-digit",
       second: "2-digit"
     })
+  },
+  convertToVND: function (price) {
+    try {
+      const num = Number(price);
+      if (isNaN(num)) return price;
+      return (num * 25000).toLocaleString("vi-VN", { maximumFractionDigits: 0 });
+    } catch (e) {
+      return price;
+    }
   }
 };

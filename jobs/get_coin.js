@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { getPrice, formatPrice, getTimeNow } = require("../src/utils/okx.js");
+const { getPrice, formatPrice, getTimeNow, convertToVND } = require("../src/utils/okx.js");
 const bot = require('../src/bot.js');
 const {
   getLastCoinPrice,
@@ -49,16 +49,17 @@ async function processCoin(coinid, index) {
 
     // Lấy danh sách notify
     const notifyList = await getActiveNotify(coinid);
-    const trend = diff > 0 ? "📈 Tăng" : "📉 Giảm";
+    const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
-    const txt = `⚡ *${coinid} - ${formatPrice(newData.currentPrice)}*\n` +
-                `- ${trend} *${diff.toFixed(2)}%*\n` +
-                `- Thời gian: *${getTimeNow()}*\n` +
-                `- Cao nhất 24h: *${formatPrice(newData.high24h)}*\n` +
-                `- Thấp nhất 24h: *${formatPrice(newData.low24h)}*`;
+    const txt = `[*${coinid}*] <code>${formatPrice(newData.currentPrice)} USDT</code> - (<code>${convertToVND(newData.currentPrice)}</code> VND)\n` +
+    `💲 LastPrice: <code>${formatPrice(lastData.currentPrice)} USDT</code>\n` +
+    `${trend} <code>${diff.toFixed(2)}%</code>\n` +
+    `⏰ Time: <code>${getTimeNow()}</code>\n` +
+    `⚖ Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
+    `⚖ Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
 
     for (const row of notifyList) {
-      const opts = { parse_mode: 'Markdown' };
+      const opts = { parse_mode: 'HTML' };
       if (row.thread_id) opts.message_thread_id = row.thread_id;
       await bot.sendMessage(row.chat_id, txt, opts);
     }
