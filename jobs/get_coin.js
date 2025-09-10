@@ -55,8 +55,8 @@ async function processCoin(coinid, index) {
     `💲 LastPrice: <code>${formatPrice(lastData.currentPrice)} USDT</code>\n` +
     `${trend} <code>${diff.toFixed(2)}%</code>\n` +
     `⏰ Time: <code>${getTimeNow()}</code>\n` +
-    `⚖ Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
-    `⚖ Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
+    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
+    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
 
     for (const row of notifyList) {
       const opts = { parse_mode: 'HTML' };
@@ -89,4 +89,43 @@ async function runCron() {
 runCron();
 cron.schedule('*/5 * * * *', runCron);
 
-console.log('Cron đã được lên lịch chạy mỗi 5 phút và chạy ngay lần đầu');
+// ==== NOTIFY DAILY
+async function notifyDaily(coinid) {
+  try {
+    const newData = await fetchCoinData(coinid);
+    if (!newData) return;
+    const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
+    `💎 CoinID: <code>${coinid}</code>\n` +
+    `💰 Price: <code>${formatPrice(newData.currentPrice)} USDT</code> - (<code>${convertToVND(newData.currentPrice)}</code> VND)\n` +
+    `⏰ Time: <code>${getTimeNow()}</code>\n` +
+    `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
+    `📈 Max(24h): <code>${formatPrice(newData.high24h)} USDT</code>`;
+    for (const row of notifyList) {
+      const opts = { parse_mode: 'HTML' };
+      if (row.thread_id) opts.message_thread_id = row.thread_id;
+      await bot.sendMessage(row.chat_id, txt, opts);
+    }
+  } catch (err) {
+    console.error(`Error processing ${coinid}:`, err);
+  }
+}
+
+async function runDaily() {
+  console.log("Start running.");
+  try {
+    const coinids = await getActiveCoinIds();
+    for (const [i, coinid] of coinids.entries()) {
+      await notifyDaily(coinid);
+    }
+  } catch (err) {
+    console.error('Run error:', err);
+  }
+}
+
+async function runCronDaily() {
+  await runDaily();
+}
+
+runCronDaily();
+
+cron.schedule('0 */2 * * *', runDaily);
