@@ -32,7 +32,6 @@ async function processCoin(coinid, index) {
     const lastRow = await getLastCoinPrice(coinid);
     let diff = 0;
     let needNotify = false;
-
     if (lastRow) {
       const lastData = JSON.parse(lastRow.data_json);
       diff = ((newData.currentPrice - lastData.currentPrice) / lastData.currentPrice) * 100;
@@ -52,7 +51,6 @@ async function processCoin(coinid, index) {
     const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
     const txt = `[*${coinid}*] <code>${formatPrice(newData.currentPrice)} USDT</code> - (<code>${convertToVND(newData.currentPrice)}</code> VND)\n` +
-    `💲 LastPrice: <code>${formatPrice(lastData.currentPrice)} USDT</code>\n` +
     `${trend} <code>${diff.toFixed(2)}%</code>\n` +
     `⏰ Time: <code>${getTimeNow()}</code>\n` +
     `📉 Min(24h): <code>${formatPrice(newData.low24h)} USDT</code>\n` +
