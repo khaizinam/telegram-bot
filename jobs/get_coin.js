@@ -51,14 +51,14 @@ async function processCoin(coinid, index) {
     const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
     const txt = '⚠ <strong>Thông báo giá thay đổiy</strong>\n\n' +
-    `💎 <strong>${coinid}<\strong>\n\n` +
+    `💎 <strong>${coinid}</strong>\n\n` +
     `-------------------\n` +
-    `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
-    `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
+    `💰 USDT: ${formatPrice(newData.currentPrice)}\n` +
+    `💰 VND: ${convertToVND(newData.currentPrice)}\n` +
     `${trend} <strong>${diff.toFixed(2)}%</strong>\n` +
     `📉 Min(24h): <strong>${formatPrice(newData.low24h)} USDT</strong>\n` +
     `📈 Max(24h): <strong>${formatPrice(newData.high24h)} USDT</strong>\n` +
-    `\n-------------------\n` +
+    `-------------------\n` +
     `⏰ ${getTimeNow()} - OKX Market price\n`;
 
     for (const row of notifyList) {
