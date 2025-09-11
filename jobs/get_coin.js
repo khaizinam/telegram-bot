@@ -130,4 +130,11 @@ async function runDaily() {
   }
 }
 
+async function runCron2() {
+  await runDaily(); // chạy ngay lần đầu
+}
+
+// Chạy lần đầu và lên lịch 5 phút
+runCron2();
+
 cron.schedule('0 */2 * * *', runDaily);
