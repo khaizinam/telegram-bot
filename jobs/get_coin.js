@@ -51,7 +51,7 @@ async function processCoin(coinid, index) {
     const trend = diff > 0 ? "📈 Up" : "📉 Down";
 
     const txt = '⚠ <strong>Thông báo giá thay đổi</strong>\n\n' +
-    `💎 <strong>${coinid}</strong>\n\n` +
+    `💎 <strong>${coinid}</strong>\n` +
     `-------------------\n` +
     `💰 USDT: ${formatPrice(newData.currentPrice)}\n` +
     `💰 VND: ${convertToVND(newData.currentPrice)}\n` +
@@ -98,7 +98,7 @@ async function notifyDaily(coinid) {
     const newData = await fetchCoinData(coinid);
     if (!newData) return;
     const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
-    `💎 <strong>${coinid}</strong>\n\n` +
+    `💎 <strong>${coinid}</strong>\n` +
     `--------------------------\n` +
     `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
     `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
