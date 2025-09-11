@@ -53,7 +53,7 @@ module.exports = {
                 reply_markup: {
                     inline_keyboard: [
                         [
-                            { text: "🌍 Website", url: "https://my.khaizinam.site" },
+                            { text: "🌍 Website", url: "https://t.me/khaizinam_auto_bot/site" },
                             { text: "💻 GitHub", url: "https://github.com/khaizinam" }
                         ]
                     ]

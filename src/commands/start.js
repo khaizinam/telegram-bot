@@ -34,6 +34,13 @@ module.exports = {
       }
       message += '\n';
     }
-    await sendMessage(bot,  message.trim(), msg, { parse_mode: 'Markdown' });
+    await sendMessage(bot,  message.trim(), msg, { reply_markup: {
+      inline_keyboard: [
+          [
+              { text: "🌍 Website", url: "https://t.me/khaizinam_auto_bot/site" },
+              { text: "💻 GitHub", url: "https://github.com/khaizinam" }
+          ]
+      ]
+    }, parse_mode: 'Markdown' });
   }
 };
