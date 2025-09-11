@@ -98,7 +98,7 @@ async function notifyDaily(coinid) {
     const newData = await fetchCoinData(coinid);
     if (!newData) return;
     const txt = '📢 <strong>Thông báo giá hàng ngày</strong>\n\n' +
-    `💎 <strong>${coinid}<\strong>\n\n` +
+    `💎 <strong>${coinid}</strong>\n\n` +
     `--------------------------\n` +
     `💰 USDT: <code>${formatPrice(newData.currentPrice)}</code>\n` +
     `💰 VND: <code>${convertToVND(newData.currentPrice)}</code>\n` +
