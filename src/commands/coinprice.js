@@ -4,7 +4,8 @@ const { sendMessage } = require("../utils/prepare");
 module.exports = {
   alias: 'coinprice',
   group: 'crypto',
-  desc: 'Xem giá coin. Ví dụ: /coinprice TON-USDT',
+  desc: 'Xem giá coin trên market OKX.',
+  usage: '/coinprice <coinid|TON-USDT>',
   handler: async (msg, args, bot) => {
     let coinid = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
     

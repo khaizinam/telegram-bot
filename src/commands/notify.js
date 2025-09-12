@@ -4,7 +4,9 @@ const { sendMessage } = require('../utils/prepare');
 module.exports = {
   alias: 'notify',
   group: 'crypto',
-  desc: 'Danh sách notify crypto. /notify list <?page=1>, /notify add <coinid>, /notify delete <id>',
+  desc: 'Danh sách notify crypto OKX.',
+  usage: '/notify list <page|1>, /notify add <coinid>, /notify delete <id>',
+  hide: false,
   handler: async (msg, args, bot) => {
     try {
       const chatId = msg.chat.id;

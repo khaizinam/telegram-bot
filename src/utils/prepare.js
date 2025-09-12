@@ -15,7 +15,7 @@ async function prepareUser(telegramUser) {
   }
 }
 
-async function sendMessage(bot, replyText, msg, opts = {}){
+async function sendMessage(bot, replyText, msg, opts = { parse_mode: 'Markdown' }){
     if (msg.message_thread_id) {
         opts.message_thread_id = msg.message_thread_id;
     }

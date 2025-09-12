@@ -4,8 +4,9 @@ const { sendMessage } = require("../utils/prepare");
 module.exports = {
   alias: 'balance',
   group: 'crypto',
-  desc: 'Danh sách lệnh đang mở',
-  hide: true,
+  desc: 'Số dư tài khoản của OKX.',
+  usage: '/balance <coinid|TON>',
+  hide: false,
   handler: async (msg, args, bot) => {
     try {
       const coinid = args[0] ? args[0].trim().toUpperCase() : "TON";

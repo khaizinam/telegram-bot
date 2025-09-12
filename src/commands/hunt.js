@@ -5,20 +5,17 @@ module.exports = {
     alias: 'hunt',
     group: 'batle',
     desc: 'Hunt animals',
+    usage: '/hunt',
+    hide: false,
     handler: async (msg, match, bot) => {
         const userId = msg.from.id;
-        console.log(userId);
         const result = await startHunt(userId);
-        console.log(result);
         if (!result.success) {
-            await bot.sendMessage(msg.chat.id, `❌ ${result.message}`);
+            await sendMessage(bot, `❌ ${result.message}`, msg);
             return;
         }
-
         const lines = result.pets.map(pet => `- ${pet.name} : 1`);
-
         const reply = `*Bạn đã săn được*\n` + lines.join('\n');
-
         await sendMessage(bot, reply, msg, { parse_mode: 'Markdown'} );
     }
 };

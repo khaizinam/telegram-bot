@@ -6,7 +6,8 @@ const moment = require('moment-timezone'); // 👉 thêm
 module.exports = {
     alias: 'showuser',
     group: 'general',
-    desc: 'Xem danh sách người dùng đã kết nối. /showuser <page>',
+    desc: 'Xem danh sách người dùng đã kết nối.',
+    usage: '/showuser <page|1>',
     hide: false,
     handler: async (msg, args, bot) => {
         const chatId = msg.chat.id;

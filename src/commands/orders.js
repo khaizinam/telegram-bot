@@ -6,6 +6,7 @@ module.exports = {
   group: 'crypto',
   desc: 'Danh sách lệnh đang mở',
   hide: false,
+  usage:'/orders',
   handler: async (msg, args, bot) => {
     try {
       const instId = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";

@@ -3,7 +3,8 @@ const { sendMessage } = require("../utils/prepare");
 module.exports = {
   alias: 'help',
   group: 'general',
-  desc: 'Xem chi tiết hướng dẫn của một lệnh cụ thể. Ví dụ: /help start',
+  desc: 'Xem chi tiết hướng dẫn của một lệnh cụ thể.',
+  usage: '/help <cmd>',
   handler: async (msg, args, bot) => {
     const chatId = msg.chat.id;
     const [commandName] = args;

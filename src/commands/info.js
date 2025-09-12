@@ -4,7 +4,9 @@ module.exports = {
     alias: 'info',
     group: 'general',
     desc: 'Show Current Group/User info',
-    handler: async (msg, match, bot) => {
+    usage: '/info',
+    hide: false,
+    handler: async (msg, args, bot) => {
         try {
             const botInfo = await bot.getMe();
 

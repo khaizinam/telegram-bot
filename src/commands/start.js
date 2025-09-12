@@ -7,6 +7,7 @@ module.exports = {
   group: 'general',
   desc: 'Giới thiệu bot và liệt kê các lệnh đang có',
   usage: '/start',
+  hide: false,
   handler: async (msg, args, bot) => {
     const username = msg.from.username || 'người dùng';
 
@@ -20,7 +21,7 @@ module.exports = {
         if (!command.alias || !command.group || !command.desc) continue;
         if (command.hide) continue;
         if (!groups[command.group]) groups[command.group] = [];
-        groups[command.group].push({ alias: command.alias, desc: command.desc });
+        groups[command.group].push({ alias: command.alias, desc: command.desc, usage: command?.usage ?? 'No usage.' });
       }
     }
 
@@ -30,7 +31,7 @@ module.exports = {
     for (const [group, cmds] of Object.entries(groups)) {
       message += `*${group.toUpperCase()}*\n`;
       for (const cmd of cmds) {
-        message += `• /${cmd.alias} — _${cmd.desc}_\n`;
+        message += `• /${cmd.alias} — _${cmd.desc}_\n  *Usage: ${cmd.usage}\n`;
       }
       message += '\n';
     }

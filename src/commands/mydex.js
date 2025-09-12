@@ -4,7 +4,9 @@ const { sendMessage } = require('../utils/prepare');
 module.exports = {
     alias: 'mydex',
     group: 'batle',
-    desc: 'My dex',
+    desc: 'Xem danh sách sở thú.',
+    usage: '/mydex <page|1>',
+    hide: false,
     handler: async (msg, match, bot) => {
         const userId = msg.from.id;
         const page = parseInt(match[0]) || 1;

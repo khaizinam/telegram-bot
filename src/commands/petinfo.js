@@ -6,6 +6,8 @@ module.exports = {
     alias: 'petinfo',
     group: 'batle',
     desc: 'Xem thông tin chi tiết của Pet bạn sở hữu',
+    usage: '/petinfo <ID>',
+    hide: false,
     handler: async (msg, args, bot) => {
         const userId = msg.from.id;
         const petInstanceId = parseInt(args[0]);
