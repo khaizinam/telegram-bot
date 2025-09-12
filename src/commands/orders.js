@@ -1,43 +1,27 @@
-// commands/showuser.js
-const { getUserList } = require('../mysql/user');
-const { sendMessage, sendMessageError } = require('../utils/prepare');
-const moment = require('moment-timezone'); // 👉 thêm
+const { getOpenOrders } = require("../utils/okx");
+const { sendMessage, sendMessageError } = require("../utils/prepare");
 
 module.exports = {
-    alias: 'showuser',
-    group: 'general',
-    desc: 'Xem danh sách người dùng đã kết nối. /showuser <page>',
-    hide: false,
-    handler: async (msg, args, bot) => {
-        const chatId = msg.chat.id;
-        const page = parseInt(args[0]) || 1;
-        const perPage = 10;
-        const offset = (page - 1) * perPage;
-        try {
-            const { total, users } = await getUserList(page, perPage);
-            if (users.length === 0) {
-                await bot.sendMessage(chatId, `❌ Không có user nào ở trang ${page}.`);
-                return;
-            }
+  alias: 'orders',
+  group: 'crypto',
+  desc: 'Danh sách lệnh đang mở',
+  hide: false,
+  handler: async (msg, args, bot) => {
+    try {
+      const instId = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
+      const orders = await getOpenOrders(instId);
 
-            let message = `*Danh sách user* (Trang ${page}/${Math.ceil(total / perPage)}):\n\n`;
-            users.forEach((user, index) => {
-                const createdAt = user.created_at
-                    ? moment(user.created_at).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss')
-                    : 'N/A';
-                const updatedAt = user.updated_at
-                    ? moment(user.updated_at).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss')
-                    : 'N/A';
-
-                message += `*${offset + index + 1}. @${user.user_name || 'N/A'}*\n`;
-                message += `ID: \`${user.user_id}\`\n`;
-                message += `Đăng ký: _${createdAt}_\n`;
-                message += `Lần cuối: _${updatedAt}_\n\n`;
-            });
-
-            await sendMessage(bot, message.trim(), msg, { parse_mode: 'Markdown' });
-        } catch (err) {
-            await sendMessageError(bot, err, msg);
-        }
+      if (!orders || !orders.data || orders.data.length === 0) {
+        return await sendMessage(bot, `✅ Không có lệnh nào đang mở cho ${instId}`, msg);
+      }
+      
+      let text = `📋 Lệnh đang mở (${instId}):\n`;
+      for (const ord of orders.data) {
+        text += `\nID: ${ord.ordId}\n-> ${ord.side.toUpperCase()} ${ord.sz} @ ${ord.px || 'MARKET'}\n⏱ ${ord.state}`;
+      }
+      return await sendMessage(bot, text, msg);
+    } catch (err) {
+      return await sendMessageError(bot, err, msg);
     }
+  },
 };
