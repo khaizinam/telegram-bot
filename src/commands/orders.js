@@ -1,11 +1,11 @@
 const { getOpenOrders } = require("../utils/okx");
-const { sendMessage } = require("../utils/prepare");
+const { sendMessage, sendMessageError } = require("../utils/prepare");
 
 module.exports = {
   alias: 'orders',
   group: 'crypto',
   desc: 'Danh sách lệnh đang mở',
-  hide: true,
+  hide: false,
   handler: async (msg, args, bot) => {
     try {
       const instId = args[0] ? args[0].trim().toUpperCase() : "TON-USDT";
@@ -21,7 +21,7 @@ module.exports = {
       }
       return await sendMessage(bot, text, msg);
     } catch (err) {
-      return await sendMessage(bot, '❌ Có lỗi xảy ra.\n' + err.message, msg);
+      return await sendMessageError(bot, err, msg);
     }
   },
 };

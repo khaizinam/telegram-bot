@@ -24,5 +24,18 @@ async function sendMessage(bot, replyText, msg, opts = {}){
 
 module.exports = {
   prepareUser,
-  sendMessage
+  sendMessage,
+  sendMessageError: async (bot, error, msg) => {
+    let opts = {
+      parse_mode: 'HTML'
+    };
+    if (msg.message_thread_id) {
+        opts.message_thread_id = msg.message_thread_id;
+    }
+    let txt = '⚠ <strong>Some Error Exists</strong>\n' +
+      '----------------------------\n' +
+      `${error?.message}` +
+      '\n----------------------------\n';
+    await bot.sendMessage(msg.chat.id, txt, opts);
+  }
 };

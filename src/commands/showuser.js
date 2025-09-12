@@ -1,12 +1,12 @@
 // commands/showuser.js
 const { getUserList } = require('../mysql/user');
-const { sendMessage } = require('../utils/prepare');
+const { sendMessage, sendMessageError } = require('../utils/prepare');
 
 module.exports = {
     alias: 'showuser',
     group: 'general',
     desc: 'Xem danh sách người dùng đã kết nối',
-    hide: true,
+    hide: false,
     handler: async (msg, args, bot) => {
         const chatId = msg.chat.id;
         const page = parseInt(args[0]) || 1;
@@ -26,8 +26,7 @@ module.exports = {
             });
             await sendMessage(bot, message.trim(), msg, { parse_mode: 'Markdown' });
         } catch (err) {
-            console.error('❌ DB ERROR:', err);
-            await sendMessage(bot, '❌ Không thể truy vấn danh sách user.', msg);
+            await sendMessageError(bot, err, msg);
         }
     }
 };
