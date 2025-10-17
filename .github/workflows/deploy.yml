@@ -37,7 +37,7 @@ jobs:
             🚀 <b>Deploy Status</b>: ${{ job.status }}
             📦 <b>Repository</b>: <a href="https://github.com/khaizinam/telegram-bot">telegram-bot</a>
             🌿 <b>Branch</b>: main
-            ⏰ <b>Time</b>: ${{ format('{0:yyyy-MM-dd, HH:mm:ss}', github.event.head_commit.timestamp) }}
+            ⏰ <b>Time</b>: ${{ github.event.head_commit.timestamp }}
             👤 <b>Author</b>: ${{ github.event.head_commit.author.name }}
             📝 <b>Commit</b>: ${{ github.event.head_commit.message }}
             🔗 <b>Commit</b>: <a href="${{ github.event.head_commit.url }}">View on GitHub</a>
