@@ -7,4 +7,4 @@ git pull origin main
 yarn install
 
 # Restart bot
-pm2 restart all
+pm2 restart ecosystem.config.js

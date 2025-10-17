@@ -1,0 +1,44 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: secrets
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASS }}
+          script: |
+            export PATH=$PATH:/usr/local/bin:/usr/bin:/bin
+            cd /var/www/telegram-bot
+            source ~/.bashrc || true
+            bash bin/deploy.sh || true
+
+      - name: Send Telegram Notification
+        if: always()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚀 <b>Deploy Status</b>: ${{ job.status }}
+            📦 <b>Repository</b>: <a href="https://github.com/khaizinam/telegram-bot">telegram-bot</a>
+            🌿 <b>Branch</b>: main
+            ⏰ <b>Time</b>: ${{ github.event.head_commit.timestamp }}
+            👤 <b>Author</b>: ${{ github.event.head_commit.author.name }}
+            📝 <b>Commit</b>: ${{ github.event.head_commit.message }}
+            🔗 <b>Commit</b>: <a href="${{ github.event.head_commit.url }}">View on GitHub</a>
+          format: html
