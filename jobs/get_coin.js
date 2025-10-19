@@ -88,9 +88,9 @@ async function runCron() {
   await run(); // chạy ngay lần đầu
 }
 
-// Chạy lần đầu và lên lịch 5 phút
+// Chạy lần đầu và lên lịch 2 tiếng
 runCron();
-cron.schedule('*/10 * * * *', runCron);
+cron.schedule('0 */2 * * *', runCron);
 
 // ==== NOTIFY DAILY
 async function notifyDaily(coinid) {
@@ -137,4 +137,4 @@ async function runCron2() {
 // Chạy lần đầu và lên lịch 5 phút
 runCron2();
 
-cron.schedule('0 */2 * * *', runDaily);
+cron.schedule('0 0 * * *', runDaily);
